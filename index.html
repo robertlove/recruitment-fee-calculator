@@ -17,17 +17,17 @@
               <div class="input-group-prepend">
                 <div class="input-group-text">$</div>
               </div>
-              <input type="number" class="form-control" id="base-amount" value="1000000">
+              <input type="number" class="form-control" id="base-amount" value="100000">
             </div>
           </div>
           <table class="table table-bordered">
             <tbody>
               <tr>
-                <th scope="row">Superannuation (<span id="super-rate-label">9.5</span>% of Base)</th>
+                <th scope="row">Super (<span id="super-rate-label">9.5</span>% of Base)</th>
                 <td class="text-right" id="super-amount">9500</td>
               </tr>
               <tr>
-                <th scope="row">Package (Base + Superannuation)</th>
+                <th scope="row">Package (Base + Super)</th>
                 <td class="text-right" id="package-amount">109500</td>
               </tr>
               <tr>
@@ -40,7 +40,7 @@
               </tr>
               <tr>
                 <th scope="row">TOTAL (Fee + GST)</th>
-                <td class="text-right" id="total-amount"><b>18,067.50</b></td>
+                <td class="text-right font-weight-bold" id="total-amount">18,067.50</td>
               </tr>
             </tbody>
           </table>
@@ -48,7 +48,7 @@
         <div class="col">
           <h4>Assumptions</h4>
           <div class="form-group">
-            <label for="super-rate">Superannuation</label>
+            <label for="super-rate">Super</label>
             <div class="input-group">
               <input type="number" class="form-control" id="super-rate" value="9.5">
               <div class="input-group-append">
@@ -57,7 +57,7 @@
             </div>
           </div>
           <div class="form-group">
-            <label for="fee-rate">Recruiter Fee</label>
+            <label for="fee-rate">Fee</label>
             <div class="input-group">
               <input type="number" class="form-control" id="fee-rate" value="15">
               <div class="input-group-append">
@@ -82,17 +82,17 @@
 
     function calculatePercentage(rate, amount)
     {
-      return (amount / 100) * rate;
+      return Number(rate) / 100 * Number(amount);
     }
 
     $(function() {
 
       $("#base-amount, #super-rate, #fee-rate, #gst-rate").change(function() {
 
-        var baseAmount = $("#base-amount").val();
-        var superRate = $("#super-rate").val();
-        var feeRate = $("#fee-rate").val();
-        var gstRate = $("#gst-rate").val();
+        var baseAmount = Number($("#base-amount").val());
+        var superRate = Number($("#super-rate").val());
+        var feeRate = Number($("#fee-rate").val());
+        var gstRate = Number($("#gst-rate").val());
 
         var superAmount = calculatePercentage(superRate, baseAmount);
         var packageAmount = baseAmount + superAmount;
@@ -100,7 +100,17 @@
         var gstAmount = calculatePercentage(gstRate, feeAmount);
         var totalAmount = feeAmount + gstAmount;
 
-        console.log(totalAmount);
+        $("#super-rate-label").html(superRate);
+        $("#fee-rate-label").html(feeRate);
+        $("#gst-rate-label").html(gstRate);
+
+        $("#super-amount").html(superAmount.toLocaleString("AUD"));
+        $("#package-amount").html(packageAmount.toLocaleString("AUD"));
+        $("#fee-amount").html(feeAmount.toLocaleString("AUD"));
+        $("#gst-amount").html(gstAmount.toLocaleString("AUD"));
+
+        $("#total-amount").html(totalAmount.toLocaleString("AUD"));
+
       });
 
     });
